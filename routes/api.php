@@ -2,7 +2,8 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-
+use Laravel\Passport\Passport;
+use App\Http\Controllers\UserController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -16,4 +17,20 @@ use Illuminate\Support\Facades\Route;
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
+});
+
+//agregamos rutas
+Route::post('/login', [UserController::class, 'login'])->name('login');
+
+Route::middleware('auth:api')->group(function () {
+
+    Route::post('/logout', [UserController::class, 'logout'])->name('logout');
+
+    Route::middleware('role:admin')->group(function () {
+
+    });
+
+    Route::middleware('role:player')->group(function () {
+
+    });
 });
