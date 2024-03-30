@@ -8,6 +8,7 @@ use App\Http\Requests\StoreGameRequest;
 use App\Http\Requests\UpdateGameRequest;
 use Illuminate\Http\Request;
 use App\Filters\GameFilter;
+use App\Models\User;
 
 class GameController extends Controller
 {
@@ -41,9 +42,37 @@ class GameController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function create(Request $request, $userId)
     {
-        //
+        // A partir del usser
+        $user = User::find($userId);
+       if (!$user) {
+            return response()->json(['error' => 'User not found.'], 404);
+        }
+        //lanzamiento de dados
+        $dice1 = rand(1, 6);
+        $dice2 = rand(1, 6);
+        $sum = $dice1 + $dice2;
+        //operador ternario para saber si es true o false que se guarda en la variablw $won
+        $won = $sum === 7 ? true : false;
+        //nuevo registro
+        $game = Game::create([
+            'user_id' => $user->id,
+            'dice1' => $dice1,
+            'dice2' => $dice2,
+            'won' => $won
+        ]);
+        return response()->json(['message' => 'Game created successfully', 'game' => $game], 201);
+    }
+    //metodo para obtener games
+    public function getGames($userId)
+    {
+        // A partir del usser
+        $user = User::findOrFail($userId);
+        // Obtengo all games asociados al user
+        $games = $user->games;
+
+        return response()->json($games, 200);
     }
 
     /**

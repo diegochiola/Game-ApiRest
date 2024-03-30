@@ -15,29 +15,29 @@ use App\Http\Controllers\GameController;
 | be assigned to the "api" middleware group. Make something great!
 |
 */
+
+
+
+//agregamos rutas
+
+Route::post('/login', [UserController::class, 'login'])->name('login');
+Route::post('/players', [UserController::class, 'register']);
 /*
+Route::middleware('auth:api')->group(function () {
+    Route::post('/logout', [UserController::class, 'logout'])->name('logout');
+    Route::middleware('role:admin')->group(function () {
+    });
+*/
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
-*/
-
-//agregamos rutas
-/*
-Route::post('/login', [UserController::class, 'login'])->name('login');
-Route::post('/players', [UserController::class, 'register']);
-
-Route::middleware('auth:api')->group(function () {
-
-    Route::post('/logout', [UserController::class, 'logout'])->name('logout');
-
-    Route::middleware('role:admin')->group(function () {
-
-    });
-*/
-//creamos
+//creamos rutas
 Route::group(['prefix' => 'v1', 'namespace' => 'App\Http\Controllers'], function(){
-    Route::apiResource('customers',UserController::class);
-    Route::apiResource('game',GameController::class);
+    Route::apiResource('users',UserController::class);
+    Route::apiResource('games',GameController::class);
+    Route::get('/users/{id}/games', [GameController::class, 'getGames']); //show games
+    Route::post('/users/{id}/games', [GameController::class, 'createGame']); //create game
+    Route::get('/users', [UserController::class, 'index']); //show users
  });
  
 
