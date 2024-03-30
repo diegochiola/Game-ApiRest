@@ -6,6 +6,8 @@ use App\Models\Game;
 use App\Http\Resources\GameCollection;
 use App\Http\Requests\StoreGameRequest;
 use App\Http\Requests\UpdateGameRequest;
+use Illuminate\Http\Request;
+use App\Filters\GameFilter;
 
 class GameController extends Controller
 {
@@ -18,11 +20,22 @@ class GameController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
         //
-        $games = Game::all();
-        return new GameCollection($games);
+        //$games = Game::all();
+        //return new GameCollection($games);
+        
+        // Crea una instancia de GameFilter
+        $filter = new GameFilter();
+        // Transforma la solicitud de filtrado en una matriz de elementos de consulta
+        $queryItems = $filter->transform($request);
+        if(count($queryItems) == 0) {
+            return new GameCollection(Game::paginate());
+        } else {
+            $games = Game::where($queryItems)->paginate();
+            return new GameCollection($games->paginate()->appends($request->query()));
+        }
     }
 
     /**

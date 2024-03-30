@@ -22,6 +22,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 */
 
 //agregamos rutas
+/*
 Route::post('/login', [UserController::class, 'login'])->name('login');
 Route::post('/players', [UserController::class, 'register']);
 
@@ -32,8 +33,14 @@ Route::middleware('auth:api')->group(function () {
     Route::middleware('role:admin')->group(function () {
 
     });
+*/
+//creamos
+Route::group(['prefix' => 'v1', 'namespace' => 'App\Http\Controllers'], function(){
+    Route::apiResource('customers',UserController::class);
+    Route::apiResource('game',GameController::class);
+ });
+ 
 
-    Route::middleware('role:player')->group(function () {
-
-    });
+Route::middleware('role:player')->group(function () {
+    
 });

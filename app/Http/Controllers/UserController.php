@@ -11,6 +11,7 @@ use App\Http\Requests\RegisterRequest;
 use App\Http\Resources\UserCollection;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\ValidationException;
+use App\Filters\UserFilter;
 
 
 class UserController extends Controller
@@ -84,10 +85,18 @@ class UserController extends Controller
    //logout
 
    //index -- lista de usuarios
-   public function index()
+   public function index(Request $request)
    {
-       $users = User::all();
-       return new UserCollection($users);
+       //$users = User::all();
+       //return new UserCollection($users);
+       $filter = new UserFilter();
+       $queryItems = $filter->transform($request);
+       $includeGames = $request->query('includeGames');
+       $users = User::where($queryItems);
+       if($includeGames) {
+           $users = $users->with('games');
+       }
+       return new UserCollection($users->paginate()->appends($request->query()));
 
    }
 
