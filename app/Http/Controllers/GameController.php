@@ -2,9 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Game;
+use App\Http\Resources\GameCollection;
 use App\Http\Requests\StoreGameRequest;
 use App\Http\Requests\UpdateGameRequest;
-use App\Models\Game;
 
 class GameController extends Controller
 {
@@ -20,6 +21,8 @@ class GameController extends Controller
     public function index()
     {
         //
+        $games = Game::all();
+        return new GameCollection($games);
     }
 
     /**

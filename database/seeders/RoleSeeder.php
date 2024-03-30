@@ -8,16 +8,19 @@ use Illuminate\Database\Seeder;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
 
-class RoleTableSeeder extends Seeder
+class RoleSeeder extends Seeder
 {
     /**
      * Run the database seeds.
      */
     public function run(): void
     {
+        //definicion de roles:
+        //admin
         $role1 = Role::firstOrCreate(
             ['name' => 'admin', 'guard_name' => 'web']
         );
+        //player
         $role2 = Role::firstOrCreate(
             ['name' => 'player', 'guard_name' => 'web']
         );

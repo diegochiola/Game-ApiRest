@@ -9,13 +9,14 @@ use Spatie\Permission\Models\Role;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 
-class UsersTableSeeder extends Seeder
+class UsersSeeder extends Seeder
 {
     /**
      * Run the database seeds.
      */
     public function run(): void
     {
+        //logica de asignacion de roles para poblar tablas
         $role1 = Role::firstOrCreate(
             ['name' => 'admin', 'guard_name' => 'web']
         );
@@ -27,8 +28,10 @@ class UsersTableSeeder extends Seeder
         $user1 = User::firstOrCreate(
             [
                 'name' => 'admin',
+                'nickname' => 'admin',
                 'email' => 'admin@mailto.com',
-                'email_verified_at' => now(), 'password' => Hash::make('admin'),
+                'email_verified_at' => now(), 
+                'password' => Hash::make('admin'),
                 'remember_token' => Str::random(10),
             ]
         );
@@ -37,8 +40,8 @@ class UsersTableSeeder extends Seeder
         }
 
         $user2 = User::firstOrCreate([
-            'name' => 'Marta',
-            'email' => 'marta@mailto.com',
+            'name' => 'Sandra',
+            'email' => 'sandra@mailto.com',
             'email_verified_at' => now(),
             'password' => Hash::make('1234'),
             'remember_token' => Str::random(10),

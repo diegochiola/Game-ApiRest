@@ -2,14 +2,16 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Models\User;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Validation\ValidationException;
-use App\Http\Requests\RegisterRequest;
-use Illuminate\Support\Facades\Validator;
-use Illuminate\Support\Facades\Hash;
+use Illuminate\Http\Request;
 use Spatie\Permission\Models\Role;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
+use App\Http\Requests\RegisterRequest;
+use App\Http\Resources\UserCollection;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\ValidationException;
+
 
 class UserController extends Controller
 {
@@ -82,6 +84,12 @@ class UserController extends Controller
    //logout
 
    //index -- lista de usuarios
+   public function index()
+   {
+       $users = User::all();
+       return new UserCollection($users);
+
+   }
 
    //getWorstPlayer
 

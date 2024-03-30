@@ -1,11 +1,12 @@
 <?php
 
+
 namespace App\Http\Resources;
 
 use Illuminate\Http\Request;
-use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Http\Resources\Json\ResourceCollection;
 
-class GameResource extends JsonResource
+class UserCollection extends ResourceCollection
 {
     /**
      * Transform the resource into an array.
@@ -16,10 +17,9 @@ class GameResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'dice1' => $this->dice1,
-            'dice2' => $this->dice2,
-            'won' => $this->won,
-            'user_id' => $this->user_id,
+            'name' => $this->name,
+            'email' => $this->email,
+            'email_verified_at' => $this->email_verified_at,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
         ];

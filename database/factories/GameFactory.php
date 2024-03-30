@@ -18,10 +18,14 @@ class GameFactory extends Factory
     {
         return [
             //
+            
             'dice1' => $this->faker->numberBetween(1, 6),
             'dice2' => $this->faker->numberBetween(1, 6),
             'user_id' => User::factory(),
-            'won' => $this->faker->boolean,
+            'won' => function (array $attributes) {
+                $sumaDices = $attributes['dice1'] + $attributes['dice2'];
+                return $sumaDices === 7;
+            },
             'created_at' => now(),
             'updated_at' => now(),
         ];

@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Laravel\Passport\Passport;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\GameController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
