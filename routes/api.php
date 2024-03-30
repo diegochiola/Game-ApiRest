@@ -22,6 +22,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 //agregamos rutas
 Route::post('/login', [UserController::class, 'login'])->name('login');
+Route::post('/players', [UserController::class, 'register']);
 
 Route::middleware('auth:api')->group(function () {
 
