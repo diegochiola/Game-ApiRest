@@ -8,6 +8,12 @@ use App\Models\Game;
 
 class GameController extends Controller
 {
+
+    //logicas:
+    //deletePlayerGames
+    //throwDice
+    //getPlayerGames
+
     /**
      * Display a listing of the resource.
      */
