@@ -75,6 +75,29 @@ class GameController extends Controller
         return response()->json($games, 200);
     }
 
+    public function percentageOfWins($userId) 
+    {
+        //buscar al user
+        $user = User::find($userId);
+        if (!$user) {
+            return  response()->json(['error' => 'User not found'], 404);
+        }
+        $totalGames = $user->games()->count();
+        $totalWins = $user->games()->where('won', true)->count();
+        if ($totalGames === 0) { 
+            $percentageOfWins = 0;
+        } else { //si al menos jugo una
+            $percentageOfWins = ($totalWins / $totalGames) * 100;
+        }
+        return response()->json([
+            'user_id' => $user->id,
+            'percentageOfWins' => $percentageOfWins,
+            'total_games' => $totalGames,
+            'total_wins' => $totalWins
+
+        ]);
+    }
+    
     /**
      * Store a newly created resource in storage.
      */

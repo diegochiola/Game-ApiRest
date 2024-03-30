@@ -33,11 +33,12 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 //creamos rutas
 Route::group(['prefix' => 'v1', 'namespace' => 'App\Http\Controllers'], function(){
-    Route::apiResource('users',UserController::class);
+    //Route::apiResource('users',UserController::class);
     Route::apiResource('games',GameController::class);
     Route::get('/users/{id}/games', [GameController::class, 'getGames']); //show games
     Route::post('/users/{id}/games', [GameController::class, 'createGame']); //create game
     Route::get('/users', [UserController::class, 'index']); //show users
+    Route::get('users/{id}/percentage-of-wins', [GameController::class, 'percentageOfWins']);
  });
  
 
