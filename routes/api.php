@@ -22,11 +22,40 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-//user register
-//Route::post('/register', [PassportController::class, 'register']);
-//user login
-//Route::post('/login', [PassportController::class, 'login'])->name('login');
+//ROUTES WITHOUT REGISTER
+Route::post('/players', [PassportController::class,'register']);
+Route::post('/login', [PassportController::class,'login']);
 
+//ROUTES WITH REGISTER
+Route::middleware('auth:api')->group(function () {
+    Route::put('/players/{id}', [UserController::class, 'updateName']); 
+    Route::post('/logout', [PassportController::class, 'logout']);
+});
+
+//ROUTES FOR PLAYERS
+Route::middleware(['auth:api', 'role:player'])->group(function () { 
+    //create game
+    Route::post('/players/{id}/games', [GameController::class, 'createGame']);
+    //delete all games 
+    Route::delete('/players/{id}/games', [GameController::class, 'destroy']); 
+    //show all games
+    Route::get('/players/{id}/games', [GameController::class, 'getGames']); 
+});
+
+//ROUTES FOR ADMINS
+Route::middleware(['auth:api', 'role:admin'])->group(function () {   
+    //percentage-of-wins of all users
+    Route::get('/players', [GameController::class, 'allUsersPercentageOfWins']);
+    //ranking all players
+    Route::get('/players/ranking', [GameController::class, 'ranking']); 
+    //winners
+    Route::get('/players/ranking/winner', [GameController::class, 'winner']); 
+    //losers
+    Route::get('/players/ranking/loser', [GameController::class, 'loser']); 
+});
+
+
+/*
 Route::group(['prefix' => 'v1', 'namespace' => 'App\Http\Controllers'], function(){
   
     Route::apiResource('users',UserController::class);
@@ -38,11 +67,6 @@ Route::group(['prefix' => 'v1', 'namespace' => 'App\Http\Controllers'], function
     Route::get('/users/{id}/games', [GameController::class, 'getGames']); 
 });
 
-    Route::post('/players', [PassportController::class,'register']);
-    //sesion actions
-    Route::post('/login', [PassportController::class,'login']);
-    Route::post('/logout', [PassportController::class, 'logout']);
-
     //create game for user
     Route::post('/users/{id}/games', [GameController::class, 'createGame']);
     Route::post('/players/{id}/games', [GameController::class, 'createGame']);
@@ -53,7 +77,7 @@ Route::group(['prefix' => 'v1', 'namespace' => 'App\Http\Controllers'], function
 
     //update user´s name
     Route::put('/users/{id}', [UserController::class, 'updateName']); 
-    Route::put('/players/{id}', [UserController::class, 'updateName']); 
+    
 
     //Ranking
     Route::get('/players/ranking', [GameController::class, 'ranking']);
@@ -74,3 +98,4 @@ Route::group(['prefix' => 'v1', 'namespace' => 'App\Http\Controllers'], function
     Route::get('/players/ranking', [GameController::class, 'ranking']);
 
 //Route::middleware('role:player')->group(function () { });
+*/

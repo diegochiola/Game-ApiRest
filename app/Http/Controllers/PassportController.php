@@ -6,9 +6,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use App\Models\User;
-use Spatie\Permission\Models\Role;
-use Spatie\Permission\Models\Permission;
 use Illuminate\Support\Facades\Auth;
+use Spatie\Permission\Models\Role;
 use League\OAuth2\Server\Exception\OAuthServerException;
 
 
@@ -16,25 +15,7 @@ class PassportController extends Controller
 {
     //esta clase sera para definir la logica de creacion de usuario
     public function login(Request $request) {
-       /*
-        try {
-            $user = User::where('email', $request->email)->first();
-
-            if (!$user || !Hash::check($request->password, $user->password)) {
-                return response()->json(['error' => 'Login error. Email or password error.'], 401);
-            }
-
-            $token = $user->createToken('example')->accessToken;
-
-            return response()->json([
-                'message' => 'You are logged in!',
-                'user' => $user,
-                'token' => $token
-            ], 200);
-        } catch (\Exception $e) {
-            return response()->json(['error' => $e->getMessage()], 500);
-        }
-        */
+ 
         if (Auth::attempt(['email' => $request->email, 'password' => $request->password])){
             $user = Auth::user();
             $success['token'] = $user->createToken('API Token')->accessToken;
@@ -62,48 +43,17 @@ class PassportController extends Controller
         $input = $request->all();
         $input['password'] = bcrypt($input['password']); //cifrar la password con bcrypt
         $user = User::create($input);
-        //asignar token 
-        $success['token'] = $user->createToken('API Token')->accessToken;
-        $success['name'] = $user->name;
         //asignar el rol
         $user->assignRole('player');
+        //asignar token 
+        $success['token'] = $user->createToken('API Token')->accessToken;
+        $success['id'] = $user->id;
+        $success['name'] = $user->name;
+        $success['role'] = 'player';
+
         return response()->json([$success, 'User registered successfully.'], 201);
     }
     
-/*
-    //unique name
-    public function generateUniqueName(Request $request)
-    {
-        $nickname = $request->nickname;
-        if ($nickname == NULL) {
-            $nickname = 'Anónimo';
-        } else {
-            $user = User::where('nickname', $nickname)->first();
-            if ($user) {
-                
-            }
-        }
-        return $nickname;
-    }
-
-    public function createUser(Request $request, $nickname)
-    {
-        $user = User::create([
-            'name' => $request->name,
-            'nickname' => $nickname,
-            'email' => $request->email,
-            'password' => Hash::make($request->password),
-        ]);
-        return $user;
-    }
-
-    //asignar rol
-    public function assignPlayerRoleToUser($user)
-    {
-        $role = Role::findByName('player');
-        $user->assignRole($role);
-    }
-    */
     //salir
     public function logout()
     {

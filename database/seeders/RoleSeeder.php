@@ -4,9 +4,9 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
-
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
+
 
 class RoleSeeder extends Seeder
 {
@@ -16,6 +16,9 @@ class RoleSeeder extends Seeder
     public function run(): void
     {
         //definicion de roles:
+        $admin = Role::create(['name' => 'admin', 'guard_name' => 'api']);
+        $player = Role::create(['name' => 'player', 'guard_name' => 'api']);
+        /*
         //admin
         $admin = Role::create(['name' => 'admin']);
         //player
@@ -29,6 +32,6 @@ class RoleSeeder extends Seeder
         Permission::create(['name' => 'percentageOfWins'])->syncRoles([$admin, $player]);
         Permission::create(['name' => 'allUsersPercentageOfWins'])->syncRoles([$admin, $player]);
         Permission::create(['name' => 'getTotalPercentageOfWins'])->syncRoles([$admin, $player]);
-
+        */
     }
 }

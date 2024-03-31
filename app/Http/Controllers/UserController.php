@@ -2,20 +2,16 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\User;
-use App\Filters\UserFilter;
-use Illuminate\Http\Request;
-use Spatie\Permission\Models\Role;
+
 use App\Http\Resources\UserResource;
-use Illuminate\Support\Facades\Auth;
+use App\Models\User;
 use Illuminate\Support\Facades\Hash;
-use App\Http\Requests\RegisterRequest;
-use App\Http\Requests\StoreUserRequest;
+use Illuminate\Http\Request;
 use App\Http\Resources\UserCollection;
-use Illuminate\Support\Facades\Validator;
-use Illuminate\Validation\ValidationException;
+use App\Filters\UserFilter;
 use App\Http\Requests\UpdateUserRequest;
 use GuzzleHttp\Psr7\Response;
+use Illuminate\Support\Facades\Auth;
 
 
 class UserController extends Controller
@@ -59,7 +55,7 @@ class UserController extends Controller
        }
        return new UserResource($user);
    }
-   public function store(StoreUserRequest $request){
+   public function store(Request $request){
     return new UserResource(User::create($request->all()));
    }
  
@@ -72,7 +68,6 @@ class UserController extends Controller
        if ($user->id != $id) {
            return response()->json(['error' => 'You are not authorized for this action'], 403);
        }
-
        $this->validate($request, [
            'name' => 'required',
            'nickname' => 'required'
