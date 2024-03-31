@@ -22,6 +22,8 @@ class Kernel extends HttpKernel
         \Illuminate\Foundation\Http\Middleware\ValidatePostSize::class,
         \App\Http\Middleware\TrimStrings::class,
         \Illuminate\Foundation\Http\Middleware\ConvertEmptyStringsToNull::class,
+        \Illuminate\Session\Middleware\StartSession::class
+        
     ];
 
     /**
@@ -69,5 +71,11 @@ class Kernel extends HttpKernel
         //se agregaron los roles
         'role' => \Spatie\Permission\Middleware\RoleMiddleware::class,
         'permission'=>\Spatie\Permission\Middleware\PermissionMiddleware::class,
+    ];
+    protected $routeMiddleware = [
+        // ...
+        'checkRole' => \App\Http\Middleware\CheckRole::class,
+        'admin' => \App\Http\Middleware\AdminMiddleware::class,
+        'player' => \App\Http\Middleware\PlayerMiddleware::class,
     ];
 }

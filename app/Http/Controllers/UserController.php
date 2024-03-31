@@ -2,67 +2,33 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\User;
-use App\Filters\UserFilter;
-use Illuminate\Http\Request;
-use Spatie\Permission\Models\Role;
+
 use App\Http\Resources\UserResource;
-use Illuminate\Support\Facades\Auth;
+use App\Models\User;
 use Illuminate\Support\Facades\Hash;
-use App\Http\Requests\RegisterRequest;
-use App\Http\Requests\StoreUserRequest;
+use Illuminate\Http\Request;
 use App\Http\Resources\UserCollection;
-use Illuminate\Support\Facades\Validator;
-use Illuminate\Validation\ValidationException;
+use App\Filters\UserFilter;
 use App\Http\Requests\UpdateUserRequest;
+use GuzzleHttp\Psr7\Response;
+use Illuminate\Support\Facades\Auth;
 
 
 class UserController extends Controller
 {
-   //register
-   public function register(Request $request)
-   {
-       try {
-           $this->validateRegistrationData($request);
+ //separate responsabilities, login logic -> passport controller
 
-           $name = $this->generateName($request);
-
-           $user = User::create([
-               'name' => $name,
-               'email' => $request->email,
-               'password' => Hash::make($request->password),
-           ]);
-
-           $this->assignRoleToUser($user);
-
-           return response()->json($user, 201);
-       } catch (ValidationException $e) {
-           return response()->json(['errors' => $e->errors()], 422);
-       } catch (\Exception $e) {
-           return response()->json(['error' => 'Error when creating user.'], 500);
-       }
-   }
-
-   private function generateName(Request $request)
-   {
-       $name = $request->name ?: 'ANONYMOUS';
-
-       if ($existingUser = User::where('name', $name)->first()) {
-           throw ValidationException::withMessages(['name' => 'Name already in use, try with other.']);
-       }
-
-       return $name;
-   }
-
-   private function assignRoleToUser($user)
-   {
-       $role = Role::findByName('player');
-       $user->assignRole($role);
-   }
-
-   //login
-
-   //logout
+ //create user
+ public function create(Request $request, $nickname)
+ {
+     $user = User::create([
+         'name' => $request->name,
+         'nickname' => $nickname,
+         'email' => $request->email,
+         'password' => Hash::make($request->password),
+     ]);
+     return $user;
+ }
 
    //index -- lista de usuarios
    public function index(Request $request)
@@ -89,16 +55,40 @@ class UserController extends Controller
        }
        return new UserResource($user);
    }
-   public function store(StoreUserRequest $request){
+   public function store(Request $request){
     return new UserResource(User::create($request->all()));
    }
-   //getWorstPlayer
+ 
+   public function update(UpdateUserRequest $request, User $user){
+    $user->update($request->all());
+   }
+   public function updateName(Request $request, $id)
+   {
+       $user = Auth::user();
+       if ($user->id != $id) {
+           return response()->json(['error' => 'You are not authorized for this action'], 403);
+       }
+       $this->validate($request, [
+           'name' => 'required',
+           'nickname' => 'required'
+       ]);
+       $user->name = $request->input('name');
+       $user->nickname = $request->input('nickname');
+       $user->save();
+       return response()->json(['message' => 'Name updated successfully!', 'user' => $user], 200);
+   }
+   //getPlayersRanking
+   /**
+     * Remove the specified resource from storage.
+     */
+    public function destroy(User $user)
+    {
+        //
+    }
+
+    //getWorstPlayer
 
    //getBestPlater
 
    //update
-   public function update(UpdateUserRequest $request, User $user){
-    $user->update($request->all());
-   }
-   //getPlayersRanking
 }

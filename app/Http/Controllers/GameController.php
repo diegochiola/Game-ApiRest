@@ -13,21 +13,11 @@ use App\Http\Requests\UpdateGameRequest;
 
 class GameController extends Controller
 {
-
-    //logicas:
-    //deletePlayerGames
-    //throwDice
-    //getPlayerGames
-
     /**
      * Display a listing of the resource.
      */
     public function index(Request $request)
     {
-        //
-        //$games = Game::all();
-        //return new GameCollection($games);
-        
         // Crea una instancia de GameFilter
         $filter = new GameFilter();
         // Transforma la solicitud de filtrado en una matriz de elementos de consulta
@@ -43,14 +33,16 @@ class GameController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create(Request $request, $userId)
+    public function createGame(Request $request, $userId)
     {
         // A partir del usser
-        $user = User::find($userId);
+        $user = $request->user();
        if (!$user) {
             return response()->json(['error' => 'User not found.'], 404);
+        } elseif ($user->id != $userId) {
+            return response()->json(['error' => 'You are not authorized for this action.'], 403);
         }
-        //lanzamiento de dados
+            //lanzamiento de dados
         $dice1 = rand(1, 6);
         $dice2 = rand(1, 6);
         $sum = $dice1 + $dice2;
@@ -65,11 +57,75 @@ class GameController extends Controller
         ]);
         return response()->json(['message' => 'Game created successfully', 'game' => $game], 201);
     }
+    //definir winner
+    public function winner()
+    {
+        $users = User::all();
+        $maxWinPercentage = 0;
+        $winners = [];
+    
+        foreach ($users as $user) {
+            $winPercentage = $this->calculatePercentageOfWins($user->id);
+    
+            if ($winPercentage > $maxWinPercentage) {
+                $maxWinPercentage = $winPercentage;
+                $winners = [$user];
+            } elseif ($winPercentage === $maxWinPercentage) {
+                $winners[] = $user;
+            }
+        }
+    
+        return response()->json(['winners' => $winners, 'win_percentage' => $maxWinPercentage], 200);
+    }
+    //define loser
+    public function loser()
+    {
+        $users = User::all();
+        $minWinPercentage = 100;
+        $losers = [];
+    
+        foreach ($users as $user) {
+            $winPercentage = $this->calculatePercentageOfWins($user->id);
+    
+            if ($winPercentage < $minWinPercentage) {
+                $minWinPercentage = $winPercentage;
+                $losers = [$user];
+            } elseif ($winPercentage === $minWinPercentage) {
+                $losers[] = $user;
+            }
+        }
+    
+        return response()->json(['losers' => $losers, 'win_percentage' => $minWinPercentage], 200);
+    }
+    //user`s ranking
+    public function ranking()
+    {
+        $users = User::all();
+        $usersWithPercentage = [];
+        foreach ($users as $user) {
+            $winPercentage = $this->calculatePercentageOfWins($user->id);
+            $usersWithPercentage[] = [
+                'user' => $user,
+                'win_percentage' => $winPercentage
+            ];
+        }
+        $usersWithPercentageCollection = collect($usersWithPercentage);
+        $usersWithPercentageSorted = $usersWithPercentageCollection->sortByDesc('win_percentage')->values()->all();
+
+        return response()->json(['users' => $usersWithPercentageSorted]);
+    }
+
     //metodo para obtener games
-    public function getGames($userId)
+    public function getGames(Request $request, $userId)
     {
         // A partir del usser
-        $user = User::findOrFail($userId);
+        $user = $request->user();
+
+        if (!$user) {
+            return response()->json(['error' => 'User not found.'], 404);
+        } elseif ($user->id != $userId) {
+            return response()->json(['error' => 'You are not authorized for this action.'], 403);
+        }
         // Obtengo all games asociados al user
         $games = $user->games;
 
@@ -148,6 +204,8 @@ public function allUsersPercentageOfWins()
 
         return response()->json(['win_percentage' => $percentage]);
     }
+
+
     /**
      * Store a newly created resource in storage.
      */
@@ -184,13 +242,15 @@ public function allUsersPercentageOfWins()
      */
 
     //destroy es para eliminar todos los juegos del user especifico
-    public function destroy($userId)
+    public function destroy(Request $request, $userId)
     {
         //encontrar user por id
-        $user = User::find($userId);
+        $user = $request->user();
         //si el susuario no se encuentra
         if  (!$user) {
             return  response()->json(['error' => 'User not found'], 404);
+        }elseif ($user->id != $userId) {
+            return response()->json(['error' => 'You are not authorized for this action.'], 403);
         }
         //delete all games del user
         $user->games()->delete();
