@@ -19,51 +19,8 @@ use App\Http\Requests\UpdateUserRequest;
 
 class UserController extends Controller
 {
-   //register
-   public function register(Request $request)
-   {
-       try {
-           $this->validateRegistrationData($request);
-
-           $name = $this->generateName($request);
-
-           $user = User::create([
-               'name' => $name,
-               'email' => $request->email,
-               'password' => Hash::make($request->password),
-           ]);
-
-           $this->assignRoleToUser($user);
-
-           return response()->json($user, 201);
-       } catch (ValidationException $e) {
-           return response()->json(['errors' => $e->errors()], 422);
-       } catch (\Exception $e) {
-           return response()->json(['error' => 'Error when creating user.'], 500);
-       }
-   }
-
-   private function generateName(Request $request)
-   {
-       $name = $request->name ?: 'ANONYMOUS';
-
-       if ($existingUser = User::where('name', $name)->first()) {
-           throw ValidationException::withMessages(['name' => 'Name already in use, try with other.']);
-       }
-
-       return $name;
-   }
-
-   private function assignRoleToUser($user)
-   {
-       $role = Role::findByName('player');
-       $user->assignRole($role);
-   }
-
-   //login
-
-   //logout
-
+ //separate responsabilities, login logic -> passport controller
+ 
    //index -- lista de usuarios
    public function index(Request $request)
    {
