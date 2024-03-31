@@ -40,7 +40,10 @@ Route::group(['prefix' => 'v1', 'namespace' => 'App\Http\Controllers'], function
     Route::get('/users', [UserController::class, 'index']); //show users
     Route::get('/users/{id}/percentage-of-wins', [GameController::class, 'percentageOfWins']);
     Route::delete('/users/{id}/games', [GameController::class, 'destroy']); //eliminas todas las partidas del user
- });
+    Route::get('/users/percentage-of-wins', [GameController::class, 'allUsersPercentageOfWins']);
+    Route::get('/users/totalPercentageOfWin', [GameController::class, 'getTotalPercentageOfWins']);
+
+});
  
 
 Route::middleware('role:player')->group(function () {

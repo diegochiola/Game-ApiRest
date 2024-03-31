@@ -99,6 +99,50 @@ class GameController extends Controller
         ]);
     }
 
+    //percentage of wins by user
+    private function calculatePercentageOfWins($userId)
+{
+    $totalGames = Game::where('user_id', $userId)->count();
+
+    if ($totalGames === 0) {
+        return 0;
+    }
+
+    $wonGames = Game::where('user_id', $userId)->where('won', true)->count();
+
+    return ($wonGames / $totalGames) * 100;
+}
+public function allUsersPercentageOfWins()
+    {
+        $users = User::all();
+        $usersWithPercentage = [];
+        foreach ($users as $user) {
+            $winPercentage = $this->calculatePercentageOfWins($user->id);
+            $usersWithPercentage[] = [
+                'user' => $user,
+                'win_percentage' => $winPercentage
+            ];
+        }
+        return response()->json(['users' => $usersWithPercentage]);
+    }
+    private function calculateTotalPercentageOfWins()
+    {
+        $totalGames = Game::count();
+
+        if ($totalGames === 0) {
+            return 0;
+        }
+
+        $wonGames = Game::where('won', true)->count();
+
+        return ($wonGames / $totalGames) * 100;
+    }
+    public function getTotalPercentageOfWins()
+    {
+        $percentage = $this->calculateTotalPercentageOfWins();
+
+        return response()->json(['win_percentage' => $percentage]);
+    }
     /**
      * Store a newly created resource in storage.
      */
