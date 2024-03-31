@@ -3,12 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Models\Game;
+use App\Models\User;
+use App\Filters\GameFilter;
+use Illuminate\Http\Request;
 use App\Http\Resources\GameCollection;
 use App\Http\Requests\StoreGameRequest;
 use App\Http\Requests\UpdateGameRequest;
-use Illuminate\Http\Request;
-use App\Filters\GameFilter;
-use App\Models\User;
+use App\Http\Requests\BulkStoreGameRequest;
 
 class GameController extends Controller
 {
@@ -97,7 +98,7 @@ class GameController extends Controller
 
         ]);
     }
-    
+
     /**
      * Store a newly created resource in storage.
      */
@@ -105,7 +106,9 @@ class GameController extends Controller
     {
         //
     }
-
+    public function bulkStore(BulkStoreGameRequest $request){
+        
+    }
     /**
      * Display the specified resource.
      */
@@ -133,8 +136,18 @@ class GameController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Game $game)
+    //destroy sera implementado para destruis todos los juegos del user
+    public function destroy($userId)
     {
-        //
+        //encontrar user por id
+        $user = User::find($userId);
+        //si el susuario no se encuentra
+        if  (!$user) {
+            return  response()->json(['error' => 'User not found'], 404);
+        }
+        //delete all games del user
+        $user->games()->delete();
+        return response()->json(['message' => "All user's have been deleted."]);
     }
+    
 }

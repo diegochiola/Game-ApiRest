@@ -10,6 +10,7 @@ use App\Http\Resources\UserResource;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use App\Http\Requests\RegisterRequest;
+use App\Http\Requests\StoreUserRequest;
 use App\Http\Resources\UserCollection;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\ValidationException;
@@ -38,39 +39,16 @@ class UserController extends Controller
        } catch (ValidationException $e) {
            return response()->json(['errors' => $e->errors()], 422);
        } catch (\Exception $e) {
-           return response()->json(['error' => 'Error al crear el usuario.'], 500);
+           return response()->json(['error' => 'Error when creating user.'], 500);
        }
    }
-/*
-   private function validateRegistrationData(Request $request)
-   {
-       $validator = Validator::make($request->all(), [
-           'name' => 'nullable|unique:users',
-           'email' => 'required|email|unique:users',
-           'password' => 'required|regex:/^(?=.*[A-Z])(?=.*[!@#\$%\^&\*]).{9,}$/'
-       ]);
 
-       $validator->setAttributeNames([
-           'email' => 'correo electrónico',
-           'password' => 'contraseña'
-       ]);
-
-       $validator->setCustomMessages([
-           'required' => 'El campo :attribute es obligatorio.',
-           'email' => 'El campo :attribute debe ser una dirección de correo válida.',
-           'unique' => 'Este :attribute ya está en uso.',
-           'regex' => 'La :attribute debe contener al menos una mayúscula y un carácter especial y tener al menos 9 caracteres de longitud.'
-       ]);
-
-       $validator->validate();
-   }
-*/
    private function generateName(Request $request)
    {
        $name = $request->name ?: 'ANONYMOUS';
 
        if ($existingUser = User::where('name', $name)->first()) {
-           throw ValidationException::withMessages(['name' => 'El nombre ya está en uso, intente con otro.']);
+           throw ValidationException::withMessages(['name' => 'Name already in use, try with other.']);
        }
 
        return $name;
@@ -111,7 +89,7 @@ class UserController extends Controller
        }
        return new UserResource($user);
    }
-   public function store(Request $request){
+   public function store(StoreUserRequest $request){
     return new UserResource(User::create($request->all()));
    }
    //getWorstPlayer
@@ -119,7 +97,7 @@ class UserController extends Controller
    //getBestPlater
 
    //update
-   public function update(Request $request, User $user){
+   public function update(UpdateUserRequest $request, User $user){
     $user->update($request->all());
    }
    //getPlayersRanking

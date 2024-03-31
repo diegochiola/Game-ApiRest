@@ -38,7 +38,8 @@ Route::group(['prefix' => 'v1', 'namespace' => 'App\Http\Controllers'], function
     Route::get('/users/{id}/games', [GameController::class, 'getGames']); //show games
     Route::post('/users/{id}/games', [GameController::class, 'createGame']); //create game
     Route::get('/users', [UserController::class, 'index']); //show users
-    Route::get('users/{id}/percentage-of-wins', [GameController::class, 'percentageOfWins']);
+    Route::get('/users/{id}/percentage-of-wins', [GameController::class, 'percentageOfWins']);
+    Route::delete('/users/{id}/games', [GameController::class, 'destroy']); //eliminas todas las partidas del user
  });
  
 

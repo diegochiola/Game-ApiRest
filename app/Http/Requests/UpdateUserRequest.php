@@ -29,6 +29,7 @@ class UpdateUserRequest extends FormRequest
                 'password' => ['required', 'min:8', 'regex:/^[a-zA-Z0-9]+$/']
             ];
         } else {
+            //al ser patch no se requieren todos los items
             return [
                 'name' => ['sometimes', 'required'],
                 'nickname' => ['sometimes', 'nullable'],

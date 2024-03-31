@@ -19,7 +19,8 @@ class StoreUserRequest extends FormRequest
      *
      * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
      */
-    public function rules(): array
+    //reglas de validacion
+        public function rules(): array
     {
         return [
             'name' => ['required'],
