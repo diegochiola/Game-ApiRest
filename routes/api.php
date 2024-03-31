@@ -31,7 +31,7 @@ Route::group(['prefix' => 'v1', 'namespace' => 'App\Http\Controllers'], function
   
     Route::apiResource('users',UserController::class);
     Route::apiResource('games', GameController::class);
-    
+
     //show all users registered
     Route::get('/users', [UserController::class, 'index']); //show users
     //show games from user
@@ -51,9 +51,12 @@ Route::group(['prefix' => 'v1', 'namespace' => 'App\Http\Controllers'], function
     Route::delete('/users/{id}/games', [GameController::class, 'destroy']); 
     Route::delete('/players/{id}/games', [GameController::class, 'destroy']);
 
-    //edit user´s name
+    //update user´s name
     Route::put('/users/{id}', [UserController::class, 'updateName']); 
     Route::put('/players/{id}', [UserController::class, 'updateName']); 
+
+    //Ranking
+    Route::get('/players/ranking', [GameController::class, 'ranking']);
 
     //show all games
     Route::get('/users/{id}/games', [GameController::class, 'getGames']); 
@@ -68,6 +71,6 @@ Route::group(['prefix' => 'v1', 'namespace' => 'App\Http\Controllers'], function
     
     //get total percentage-of-wins of all users
     Route::get('/users/total-percentage-of-wins', [GameController::class, 'getTotalPercentageOfWins']);
-
+    Route::get('/players/ranking', [GameController::class, 'ranking']);
 
 //Route::middleware('role:player')->group(function () { });

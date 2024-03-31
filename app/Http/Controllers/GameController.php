@@ -148,6 +148,26 @@ public function allUsersPercentageOfWins()
 
         return response()->json(['win_percentage' => $percentage]);
     }
+    
+    //user`s ranking
+    public function ranking()
+    {
+        $users = User::all();
+        $usersWithPercentage = [];
+        foreach ($users as $user) {
+            $winPercentage = $this->calculatePercentageOfWins($user->id);
+            $usersWithPercentage[] = [
+                'user' => $user,
+                'win_percentage' => $winPercentage
+            ];
+        }
+        $usersWithPercentageCollection = collect($usersWithPercentage);
+        $usersWithPercentageSorted = $usersWithPercentageCollection->sortByDesc('win_percentage')->values()->all();
+
+        return response()->json(['users' => $usersWithPercentageSorted]);
+    }
+
+
     /**
      * Store a newly created resource in storage.
      */
