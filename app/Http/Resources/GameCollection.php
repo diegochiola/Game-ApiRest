@@ -6,21 +6,24 @@ use Illuminate\Http\Resources\Json\ResourceCollection;
 
 class GameCollection extends ResourceCollection
 {
-    /**
-     * Transform the resource into an array.
+ /**
+     * Transform the resource collection into an array.
      *
-     * @return array<string, mixed>
+     * @param  \Illuminate\Http\Request  $request
+     * @return array
      */
-    public function toArray(Request $request): array
+    public function toArray($request)
     {
-        return [
-            'id' => $this->id,
-            'dice1' => $this->dice1,
-            'dice2' => $this->dice2,
-            'won' => $this->won,
-            'user_id' => $this->user_id,
-            'created_at' => $this->created_at,
-            'updated_at' => $this->updated_at,
-        ];
+        return $this->collection->map(function ($game) {
+            return [
+                'id' => $game->id,
+                'dice1' => $game->dice1,
+                'dice2' => $game->dice2,
+                'won' => $game->won,
+                'user_id' => $game->user_id,
+                'created_at' => $game->created_at,
+                'updated_at' => $game->updated_at,
+            ];
+        });
     }
 }
