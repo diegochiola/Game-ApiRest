@@ -80,21 +80,4 @@ class PassportController extends Controller
     }
 
 
-
-
-   private function assignRoleToUser($user)
-   {
-       $role = Role::findByName('player');
-       $user->assignRole($role);
-   }
-
-
-
-
-
-
-
-
-
-
 }
