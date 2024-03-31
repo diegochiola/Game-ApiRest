@@ -9,7 +9,7 @@ use Illuminate\Http\Request;
 use App\Http\Resources\GameCollection;
 use App\Http\Requests\StoreGameRequest;
 use App\Http\Requests\UpdateGameRequest;
-use App\Http\Requests\BulkStoreGameRequest;
+
 
 class GameController extends Controller
 {
@@ -76,6 +76,7 @@ class GameController extends Controller
         return response()->json($games, 200);
     }
 
+    //porcentaje de wins para un user especifico
     public function percentageOfWins($userId) 
     {
         //buscar al user
@@ -112,6 +113,8 @@ class GameController extends Controller
 
     return ($wonGames / $totalGames) * 100;
 }
+
+//calcular el porcentaje de wins de todos los users
 public function allUsersPercentageOfWins()
     {
         $users = User::all();
@@ -125,6 +128,7 @@ public function allUsersPercentageOfWins()
         }
         return response()->json(['users' => $usersWithPercentage]);
     }
+    //calcular el porcentaje total de wins en todos los games
     private function calculateTotalPercentageOfWins()
     {
         $totalGames = Game::count();
@@ -137,6 +141,7 @@ public function allUsersPercentageOfWins()
 
         return ($wonGames / $totalGames) * 100;
     }
+    //porcentaje total de wins en todos los games
     public function getTotalPercentageOfWins()
     {
         $percentage = $this->calculateTotalPercentageOfWins();
@@ -149,9 +154,6 @@ public function allUsersPercentageOfWins()
     public function store(StoreGameRequest $request)
     {
         //
-    }
-    public function bulkStore(BulkStoreGameRequest $request){
-        
     }
     /**
      * Display the specified resource.
@@ -180,7 +182,8 @@ public function allUsersPercentageOfWins()
     /**
      * Remove the specified resource from storage.
      */
-    //destroy sera implementado para destruis todos los juegos del user
+
+    //destroy es para eliminar todos los juegos del user especifico
     public function destroy($userId)
     {
         //encontrar user por id
@@ -191,7 +194,7 @@ public function allUsersPercentageOfWins()
         }
         //delete all games del user
         $user->games()->delete();
-        return response()->json(['message' => "All user's have been deleted."]);
+        return response()->json(['message' => 'All games for user deleted successfully!']);
     }
     
 }
