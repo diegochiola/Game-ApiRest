@@ -14,18 +14,7 @@ use League\OAuth2\Server\Exception\OAuthServerException;
 class PassportController extends Controller
 {
     //esta clase sera para definir la logica de creacion de usuario
-    public function login(Request $request) {
- 
-        if (Auth::attempt(['email' => $request->email, 'password' => $request->password])){
-            $user = Auth::user();
-            $success['token'] = $user->createToken('API Token')->accessToken;
-            $success['name'] = $user->name;
-            return response()->json([$success, 'You are logged in!'], 200);
-        } else {
-            return response()->json(['error' => 'Login error. Email or password error.'], 401);
-        }
-    }
-
+   
     public function register(Request $request)
     { 
         $validator = Validator::make($request->all(), [
@@ -46,13 +35,43 @@ class PassportController extends Controller
         //asignar el rol
         $user->assignRole('player');
         //asignar token 
-        $success['token'] = $user->createToken('API Token')->accessToken;
+        $accessToken = $user->createToken('AuthToken')->accessToken; 
+        $success['token'] = $accessToken;
         $success['id'] = $user->id;
         $success['name'] = $user->name;
         $success['role'] = 'player';
 
         return response()->json([$success, 'User registered successfully.'], 201);
     }
+   
+    public function login(Request $request) {
+        /*
+        $credentials = $request->only('email', 'password');
+        if (!Auth::attempt($credentials)){
+            return response([
+                'message' => 'Login error. Email or password error.'
+            ],401);
+        }
+        $accessToken = Auth::user()->createToken('AuthToken')->accessToken;
+        return response([
+            'user' => Auth::user(),
+            'access_token' => $accessToken
+        ]);
+        */
+        if (Auth::attempt(['email' => $request->email, 'password' => $request->password])){
+            $user = Auth::user();
+            $success['token'] = $user->createToken('API Token')->accessToken;
+            $success['name'] = $user->name;
+            return response()->json([$success, 'You are logged in!'], 200);
+            //return response()->json(['success' => $success, 'message' => 'You are logged in!'], 200);
+
+        } else {
+            return response()->json(['error' => 'Login error. Email or password error.'], 401);
+        }
+        
+    }
+
+ 
     
     //salir
     public function logout()

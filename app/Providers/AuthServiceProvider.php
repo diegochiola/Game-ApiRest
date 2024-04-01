@@ -27,5 +27,9 @@ class AuthServiceProvider extends ServiceProvider
     {
         //
         //Passport::loadKeysFrom(__DIR__.'/../secrets/oauth');
+        $this->registerPolicies();
+        //Passport::routes();
+        //agregar tiempo de expriracion del token de 1hora
+        Passport::personalAccessTokensExpireIn(now()->addHours(1));
     }
 }
