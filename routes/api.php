@@ -2,10 +2,12 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-//use Laravel\Passport\Passport;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\GameController;
 use App\Http\Controllers\PassportController;
+
+use Laravel\Passport\Passport;
+
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -17,10 +19,11 @@ use App\Http\Controllers\PassportController;
 |
 */
 
-
+/*
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
+*/
 
 //ROUTES WITHOUT REGISTER
 Route::post('/players', [PassportController::class,'register']);
