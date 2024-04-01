@@ -16,7 +16,6 @@ use Illuminate\Support\Facades\Auth;
 
 class UserController extends Controller
 {
- //separate responsabilities, login logic -> passport controller
 
  //create user
  public function create(Request $request, $nickname)
@@ -33,9 +32,6 @@ class UserController extends Controller
    //index -- lista de usuarios
    public function index(Request $request)
    {
-       //$users = User::all();
-       //return new UserCollection($users);
-       
        $filter = new UserFilter();
        $queryItems = $filter->transform($request);
        $includeGames = $request->query('includeGames');
@@ -86,9 +82,4 @@ class UserController extends Controller
         //
     }
 
-    //getWorstPlayer
-
-   //getBestPlater
-
-   //update
 }

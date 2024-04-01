@@ -16,6 +16,8 @@ class UserCollection extends ResourceCollection
      */
     public function toArray($request)
     {
+        return parent::toArray($request);
+        /*
         return $this->collection->map(function ($user) {
             return [
                 'id' => $user->id,
@@ -26,7 +28,7 @@ class UserCollection extends ResourceCollection
                 'created_at' => $user->created_at,
                 'updated_at' => $user->updated_at,
             ];
-        });
+        });*/
     }
 }
     

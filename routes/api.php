@@ -17,10 +17,11 @@ use App\Http\Controllers\PassportController;
 |
 */
 
-
+/*
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
+*/
 
 //ROUTES WITHOUT REGISTER
 Route::post('/players', [PassportController::class,'register']);

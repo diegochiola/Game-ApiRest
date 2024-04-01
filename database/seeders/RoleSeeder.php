@@ -15,9 +15,23 @@ class RoleSeeder extends Seeder
      */
     public function run(): void
     {
+        /*
         //definicion de roles:
+        $adminRole = Role::where('name', 'admin')->where('guard_name', 'api')->first();
+        if (!$adminRole) {
+            Role::create(['name' => 'admin', 'guard_name' => 'api']);
+        }
+
+        $playerRole = Role::where('name', 'player')->where('guard_name', 'api')->first();
+        if (!$playerRole) {
+            Role::create(['name' => 'player', 'guard_name' => 'api']);
+        }
+        */
         $admin = Role::create(['name' => 'admin', 'guard_name' => 'api']);
         $player = Role::create(['name' => 'player', 'guard_name' => 'api']);
+        
+        
+        
         /*
         //admin
         $admin = Role::create(['name' => 'admin']);

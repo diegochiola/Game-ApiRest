@@ -5,9 +5,7 @@ namespace App\Providers;
 // use Illuminate\Support\Facades\Gate;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 use Laravel\Passport\Passport;
-use Illuminate\Support\Facades\Gate;
-use App\Policies\UserPolicy;
-use App\User;
+
 
 class AuthServiceProvider extends ServiceProvider
 {
@@ -18,7 +16,7 @@ class AuthServiceProvider extends ServiceProvider
      */
     protected $policies = [
         //
-        'App\Model' => 'App\Policies\ModelPolicy',
+        //'App\Model' => 'App\Policies\ModelPolicy',
 
     ];
 
@@ -29,5 +27,9 @@ class AuthServiceProvider extends ServiceProvider
     {
         //
         //Passport::loadKeysFrom(__DIR__.'/../secrets/oauth');
+        $this->registerPolicies();
+        //Passport::routes();
+        //agregar tiempo de expriracion del token de 1hora
+        Passport::personalAccessTokensExpireIn(now()->addHours(1));
     }
 }

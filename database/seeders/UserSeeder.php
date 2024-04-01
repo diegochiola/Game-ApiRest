@@ -29,7 +29,7 @@ class UserSeeder extends Seeder
 
         //poblar tablas con users
         User::factory()
-            ->count(10)
+            ->count(15)
             ->hasGames(5)
             ->create()
             ->each(function($user){
