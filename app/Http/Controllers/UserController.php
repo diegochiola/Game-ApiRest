@@ -32,9 +32,6 @@ class UserController extends Controller
    //index -- lista de usuarios
    public function index(Request $request)
    {
-       //$users = User::all();
-       //return new UserCollection($users);
-       
        $filter = new UserFilter();
        $queryItems = $filter->transform($request);
        $includeGames = $request->query('includeGames');

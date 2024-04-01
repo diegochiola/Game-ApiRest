@@ -45,10 +45,12 @@ class UserFactory extends Factory
             'email_verified_at' => null,
         ]);
     }
+    /*
     public function configure(){
         return $this->afterCreating(function (User $user) {
             $role = Role::where('name', 'player')->first();
             $user->assignRole($role);
         }); 
     }
+    */
 }
