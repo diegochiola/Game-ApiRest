@@ -2,12 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Http\JsonResponse;
+use Spatie\Permission\Models\Role;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
-use App\Models\User;
-use Illuminate\Support\Facades\Auth;
-use Spatie\Permission\Models\Role;
 use League\OAuth2\Server\Exception\OAuthServerException;
 
 
@@ -15,7 +16,7 @@ class PassportController extends Controller
 {
     //esta clase sera para definir la logica de creacion de usuario
    
-    public function register(Request $request)
+    public function register(Request $request): JsonResponse
     { 
         $validator = Validator::make($request->all(), [
             'name' => 'required',
@@ -26,47 +27,34 @@ class PassportController extends Controller
         //si falla la validacion
         if ($validator->fails()) {
             //return response()->json($validator->errors(), 422);
-            return response()->json(['Validation Error', $validator->errors()], 401);
+            return $this->sendError(['Validation Error', $validator->errors()]);
         }
         //si son validos
         $input = $request->all();
         $input['password'] = bcrypt($input['password']); //cifrar la password con bcrypt
-        $user = User::create($input);
-        //asignar el rol
-        $user->assignRole('player');
+        //crear usuario con los inputs asignar el rol
+        $user = User::create($input)->assignRole('Player');
         //asignar token 
-        $accessToken = $user->createToken('AuthToken')->accessToken; 
-        $success['token'] = $accessToken;
+        $success['token'] = $user->createToken('AuthToken')->accessToken; 
         $success['id'] = $user->id;
+        $success['nickname'] = $user->nickname;
         $success['name'] = $user->name;
-        $success['role'] = 'player';
+        $success['role'] = $user->role; //probar esto asi
 
-        return response()->json([$success, 'User registered successfully.'], 201);
+        return $this->sendResponse([$success, 'User registered successfully.'], 201);
     }
    
-    public function login(Request $request) {
-        /*
-        $credentials = $request->only('email', 'password');
-        if (!Auth::attempt($credentials)){
-            return response([
-                'message' => 'Login error. Email or password error.'
-            ],401);
-        }
-        $accessToken = Auth::user()->createToken('AuthToken')->accessToken;
-        return response([
-            'user' => Auth::user(),
-            'access_token' => $accessToken
-        ]);
-        */
+    public function login(Request $request): JsonResponse 
+    {   
         if (Auth::attempt(['email' => $request->email, 'password' => $request->password])){
             $user = Auth::user();
             $success['token'] = $user->createToken('API Token')->accessToken;
             $success['name'] = $user->name;
-            return response()->json([$success, 'You are logged in!'], 200);
+            return $this->sendResponse([$success, 'You are logged in!'], 200);
             //return response()->json(['success' => $success, 'message' => 'You are logged in!'], 200);
 
         } else {
-            return response()->json(['error' => 'Login error. Email or password error.'], 401);
+            return $this->sendError(['error' => 'Login error. Email or password error.'], 401);
         }
         
     }
@@ -82,9 +70,9 @@ class PassportController extends Controller
 
             $user->tokens->each->revoke();
 
-            return response()->json('Log out successfully!', 200);
+            return $this->sendResponse('Log out successfully!', 200);
         } else {
-            return response()->json('You are not logged in.', 401);
+            return $this->sendError('You are not logged in.', 401);
         }
     }
 
