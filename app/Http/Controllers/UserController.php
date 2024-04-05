@@ -73,7 +73,7 @@ class UserController extends Controller
        $user->save();
        return response()->json(['message' => 'Name updated successfully!', 'user' => $user], 200);
    }
-   //getPlayersRanking
+   
    /**
      * Remove the specified resource from storage.
      */
