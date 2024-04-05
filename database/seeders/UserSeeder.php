@@ -18,22 +18,24 @@ class UserSeeder extends Seeder
     {
         //primero corroborar que funcione
         //creamos el administrador
-        User::create([         
+        $adminUser = User::create([         
             'name' => 'admin',
             'nickname' => 'admin',
             'email' => 'admin@admin.com',
             'email_verified_at' => now(),
             'password' => Hash::make('password'),
             'remember_token' => Str::random(10),
-        ])->assignRole('admin');
-
-        //poblar tablas con users
-        User::factory()
-            ->count(15)
-            ->hasGames(5)
-            ->create()
-            ->each(function($user){
-                $user->assignRole('player');
-            });
+        ]);
+        foreach($adminUser as $admin){
+            $admin->assignRole('admin');
         }
+        $userPlayer= User::factory()
+        ->count(15)
+        ->hasGames(5)
+        ->create()
+        ->each(function($user){
+            $user->assignRole('player');
+        });
+
     }
+}

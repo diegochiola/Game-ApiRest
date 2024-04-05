@@ -33,7 +33,7 @@ class PassportController extends Controller
         $input = $request->all();
         $input['password'] = bcrypt($input['password']); //cifrar la password con bcrypt
         //crear usuario con los inputs asignar el rol
-        $user = User::create($input)->assignRole('Player');
+        $user = User::create($input)->assignRole('player');
         //asignar token 
         $success['token'] = $user->createToken('AuthToken')->accessToken; 
         $success['id'] = $user->id;

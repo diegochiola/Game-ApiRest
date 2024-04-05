@@ -24,7 +24,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 */
 
 //ROUTES WITHOUT REGISTER
-Route::post('/players', [PassportController::class,'register']);
+Route::post('/register', [PassportController::class,'register']);
 Route::post('/login', [PassportController::class,'login']);
 
 //ROUTES WITH REGISTER
