@@ -26,15 +26,14 @@ class UserSeeder extends Seeder
             'password' => Hash::make('password'),
             'remember_token' => Str::random(10),
         ]);
-        foreach($adminUser as $admin){
-            $admin->assignRole('admin');
-        }
+        $adminUser->assignRole('admin');
+ 
         $userPlayer= User::factory()
         ->count(15)
         ->hasGames(5)
         ->create()
-        ->each(function($user){
-            $user->assignRole('player');
+        ->each(function($userPlayer){
+            $userPlayer->assignRole('player');
         });
 
     }
