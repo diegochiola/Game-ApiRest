@@ -35,7 +35,7 @@ class GameController extends Controller
      */
     public function createGame(Request $request, $userId)
     {
-        // A partir del usser
+        // A partir del user
         $user = $request->user();
        if (!$user) {
             return response()->json(['error' => 'User not found.'], 404);
