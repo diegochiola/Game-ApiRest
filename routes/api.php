@@ -29,4 +29,6 @@ Route::middleware(['auth:api', 'role:admin'])->group(function () {
     Route::get('/players/ranking', [GameController::class, 'ranking']); 
     Route::get('/players/ranking/winner', [GameController::class, 'winner']); 
     Route::get('/players/ranking/loser', [GameController::class, 'loser']); 
+    //agregue para que en los test los admin puedan ver los juegos del jugador:
+    //Route::get('/players/{id}/games', [GameController::class, 'getGamesForPlayer']);
 });

@@ -40,7 +40,7 @@ class PassportController extends Controller
         $success['nickname'] = $user->nickname;
         $success['name'] = $user->name;
         $success['role'] = $user->role; //probar esto asi
-
+        
         return $this->sendResponse([$success, 'User registered successfully.'], 201);
     }
    
@@ -59,8 +59,6 @@ class PassportController extends Controller
         
     }
 
- 
-    
     //salir
     public function logout()
     {
